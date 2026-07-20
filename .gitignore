@@ -1,0 +1,20 @@
+# Executables & Binaries (Uploaded to Releases, not git tracking)
+*.exe
+manga-psd-merger-gui.exe
+manga-psd-merger.exe
+
+# PyInstaller & Build Artifacts
+build/
+dist/
+*.spec
+__pycache__/
+*.pyc
+
+# Node modules & dependencies
+node_modules/
+
+# OS / Editor Files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

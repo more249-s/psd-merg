@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manga PSD Merger - أداة دمج المانجا الذكية</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Background Glowing Blobs -->
+  <div class="glow-bg">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+  </div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo-area">
+        <div class="logo-icon-container">
+          <svg class="logo-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="glow-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#8b5cf6" />
+                <stop offset="100%" stop-color="#06b6d4" />
+              </linearGradient>
+            </defs>
+            <rect x="20" y="20" width="45" height="60" rx="6" fill="none" stroke="url(#glow-grad)" stroke-width="4" stroke-dasharray="8 4" opacity="0.6"/>
+            <rect x="35" y="10" width="45" height="60" rx="6" fill="none" stroke="url(#glow-grad)" stroke-width="4"/>
+            <path d="M45 25 L70 25 M45 40 L70 40 M45 55 L60 55" stroke="url(#glow-grad)" stroke-width="3" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="title-text">
+          <h1>Manga PSD Merger</h1>
+          <p>أداة دمج صفحات الكلين والراو في ملفات PSD متعددة الطبقات</p>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Grid Layout -->
+    <main class="main-grid">
+      <!-- Left Column: Controls & Chapters -->
+      <section class="grid-column right-sidebar">
+        <!-- Path Selection Card -->
+        <div class="glass-card card-path">
+          <h2 class="card-title">🔍 تحديد مجلد العمل</h2>
+          <div class="input-group">
+            <input type="text" id="directory-path" placeholder="أدخل مسار مجلد المانجا الرئيسي أو مجلد الفصل..." autocomplete="off">
+            <button id="btn-browse" class="btn btn-secondary">تصفح 📁</button>
+          </div>
+          <button id="btn-scan" class="btn btn-primary w-full">فحص المجلد ⚡</button>
+        </div>
+
+        <!-- Detected Chapters Card -->
+        <div class="glass-card card-chapters">
+          <div class="card-header-actions">
+            <h2 class="card-title">📚 الفصول المكتشفة</h2>
+            <div class="select-actions" id="chapters-actions" style="display: none;">
+              <button id="btn-select-all" class="btn-text">تحديد الكل</button>
+              <button id="btn-deselect-all" class="btn-text">إلغاء التحديد</button>
+            </div>
+          </div>
+          <div class="chapters-list-container" id="chapters-list-wrapper">
+            <div class="empty-state" id="chapters-empty-state">
+              <div class="empty-icon">📁</div>
+              <p>قم بفحص مجلد العمل لعرض الفصول المتاحة للدمج</p>
+            </div>
+            <div class="chapters-list" id="chapters-list" style="display: none;">
+              <!-- Dynamic chapters list here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Card -->
+        <div class="glass-card card-settings">
+          <h2 class="card-title">⚙️ إعدادات الطبقات والمخرجات</h2>
+          
+          <div class="setting-item">
+            <label for="layer-raw">اسم طبقة الراو (RAW):</label>
+            <input type="text" id="layer-raw" value="RAW" placeholder="RAW">
+          </div>
+          
+          <div class="setting-item">
+            <label for="layer-clean">اسم طبقة التبييض (CLEAN):</label>
+            <input type="text" id="layer-clean" value="CLEAN" placeholder="CLEAN">
+          </div>
+
+          <div class="setting-item">
+            <label for="resize-mode">وضع مطابقة الحجم:</label>
+            <select id="resize-mode">
+              <option value="clean-to-raw">تكبير/تصغير الكلين ليطابق الراو (موصى به)</option>
+              <option value="none">بدون تغيير الحجم</option>
+            </select>
+          </div>
+
+          <div class="setting-item">
+            <label for="output-folder">اسم مجلد ملفات الـ PSD:</label>
+            <input type="text" id="output-folder" value="Output_PSDs" placeholder="Output_PSDs">
+          </div>
+          
+          <button id="btn-save-settings" class="btn btn-secondary w-full">حفظ الإعدادات 💾</button>
+        </div>
+      </section>
+
+      <!-- Right Column: Status & Live Preview -->
+      <section class="grid-column main-panel">
+        <!-- Progress Circular Dashboard -->
+        <div class="glass-card card-progress">
+          <div class="progress-flex">
+            <!-- Progress Ring -->
+            <div class="progress-ring-container">
+              <svg class="progress-ring" width="120" height="120">
+                <circle class="progress-ring-bg" stroke="#1e293b" stroke-width="8" fill="transparent" r="52" cx="60" cy="60"/>
+                <circle id="progress-circle" class="progress-ring-bar" stroke="url(#progress-gradient)" stroke-width="8" stroke-dasharray="326.7" stroke-dashoffset="326.7" stroke-linecap="round" fill="transparent" r="52" cx="60" cy="60"/>
+              </svg>
+              <div class="progress-text">
+                <span id="progress-percentage">0%</span>
+                <span class="progress-label">مكتمل</span>
+              </div>
+            </div>
+            
+            <!-- Statistics -->
+            <div class="stats-container">
+              <div class="stat-box">
+                <div class="stat-num" id="stat-processed">0</div>
+                <div class="stat-label">دمجت بنجاح</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-num" id="stat-failed">0</div>
+                <div class="stat-label">فشلت</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-num" id="stat-time">--:--</div>
+                <div class="stat-label">الوقت المستغرق</div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="progress-sub-bar-container">
+            <div class="sub-progress-header">
+              <span id="current-task-status">في انتظار بدء عملية الدمج...</span>
+              <span id="current-task-count">0 / 0</span>
+            </div>
+            <div class="progress-bar-bg">
+              <div id="progress-bar-fill" class="progress-bar-fill" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="merge-action-area">
+            <button id="btn-start-merge" class="btn btn-action w-full" disabled>بدء عملية الدمج 🚀</button>
+          </div>
+        </div>
+
+        <!-- Live Preview Card -->
+        <div class="glass-card card-preview">
+          <h2 class="card-title">📺 المعاينة المباشرة للمزامنة</h2>
+          <div class="preview-stage">
+            <div class="preview-box" id="preview-placeholder">
+              <div class="preview-placeholder-text">
+                <span class="preview-icon">👁️</span>
+                <p>ستظهر المعاينة الحية للصفحات الجاري دمجها هنا</p>
+              </div>
+            </div>
+            <div class="preview-box" id="preview-content" style="display: none;">
+              <div class="preview-image-wrapper">
+                <img id="img-preview" src="" alt="Live Preview">
+                <div class="preview-badge" id="preview-badge-name">صفحة: 01.jpg</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Console Log Card -->
+        <div class="glass-card card-logs">
+          <div class="card-header-actions">
+            <h2 class="card-title">📟 سجل الأحداث المباشر</h2>
+            <button id="btn-clear-logs" class="btn-text">مسح السجل</button>
+          </div>
+          <div class="logs-console" id="logs-console">
+            <div class="log-line system">[SYSTEM] الأداة جاهزة للعمل. الرجاء تحديد مجلد الفحص.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- SVGs for styling -->
+  <svg style="width:0; height:0; position:absolute;" aria-hidden="true" focusable="false">
+    <linearGradient id="progress-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#8b5cf6" />
+      <stop offset="100%" stop-color="#06b6d4" />
+    </linearGradient>
+  </svg>
+
+  <!-- Folder Browser Modal -->
+  <div class="modal-overlay" id="browser-modal" style="display: none;">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>📂 تصفح مجلدات النظام</h3>
+        <button id="btn-close-modal" class="btn-close">&times;</button>
+      </div>
+      <div class="modal-path-indicator">
+        <span id="modal-current-path">جاري التحميل...</span>
+      </div>
+      <div class="modal-body">
+        <div class="browser-list" id="browser-items-list">
+          <!-- Dynamic filesystem items -->
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-modal-up" class="btn btn-secondary">المجلد الأعلى ⬆️</button>
+        <button id="btn-modal-select" class="btn btn-primary">اختيار هذا المجلد ✔️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clean Folder Selection Modal -->
+  <div class="modal-overlay" id="clean-folder-modal" style="display: none;">
+    <div class="modal-card modal-small">
+      <div class="modal-header">
+        <h3>📂 تحديد مجلد التبييض (Clean)</h3>
+      </div>
+      <div class="modal-body">
+        <p class="modal-desc">تم اكتشاف عدة مجلدات فرعية في الفصل. يرجى اختيار المجلد الذي يحتوي على صفحات التبييض (Clean):</p>
+        <div class="clean-folder-options" id="clean-folder-options-container">
+          <!-- Dynamic options buttons -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

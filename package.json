@@ -1,0 +1,41 @@
+{
+  "name": "manga-psd-merger-gui",
+  "version": "1.0.0",
+  "description": "Premium GUI Manga PSD Layer Merger Tool",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "build": "node build.js"
+  },
+  "keywords": [
+    "manga",
+    "psd",
+    "merger",
+    "gui"
+  ],
+  "author": "Antigravity",
+  "license": "MIT",
+  "dependencies": {
+    "ag-psd": "^30.2.0",
+    "express": "^4.19.2",
+    "open": "^8.4.2",
+    "png-to-ico": "^2.1.8",
+    "resedit": "^1.7.1",
+    "ws": "^8.16.0"
+  },
+  "devDependencies": {
+    "@yao-pkg/pkg": "^5.11.1",
+    "sharp": "^0.33.3"
+  },
+  "bin": "server.js",
+  "pkg": {
+    "assets": [
+      "public/**/*",
+      "worker.js"
+    ],
+    "targets": [
+      "node20-win-x64"
+    ],
+    "outputPath": "dist"
+  }
+}
